@@ -1,28 +1,6 @@
-/*
-    JaCaMo Application File Template
-    --------------------------------
-
-    This file defines the initial state of the MAS (initial agents, environment, organisation, ....)
-
-    (see jacamo/doc/jcm.html for more information about what can be defined in this file)
-
-    JaCaMo 1.2
-*/
-
 mas main {
 
-    agent bob: sample_agent.asl {
-      focus: w.c1 
-    }
+agent drone1 : drone.asl
 
-    agent ar_condicionado: ar_condicionado.asl
-    agent camera: camera.asl
-    agent cortina: cortina.asl
-    agent lampada: lampada.asl
-    agent fechadura: fechadura.asl
-
-
-    workspace w {
-      artifact c1: example.Counter(3) 
-    }
+    workspace w {}
 }
