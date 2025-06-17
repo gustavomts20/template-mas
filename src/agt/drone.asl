@@ -1,18 +1,23 @@
 { include("$jacamo/templates/common-cartago.asl") }
 
-!inicializar_drone.
+!start.
 
-+!inicializar_drone
- <- makeArtifact("grid","artifacts.PatrolEnv",[500,200,700,500,10],G);
-    focus(G);
-    .print("Drone inicializado: workspace=",G);
-    startPatrol.
++!start
+ <- .my_name(Me);
+    lookupArtifact("grid",Env) | makeArtifact("grid","artifacts.PatrolEnv",[500,200,700,500,10],Env);
+    focus(Env);
+    registerDrone(Me);
+    .send(coord,tell,ready(Me));
+    .print("Drone ",Me," ready.").
 
-+cellScanned(X,Y)
- <- .print("→ Patrulhando Região (",X,",",Y,")").
++gather(X,Y)[source(coord)]
+ <- !goto(X,Y).
 
-+threat(X,Y)
- <- .print("Possivel ameaça detectada na região (",X,",",Y,")").
++threat(X,Y)[source(Env)]
+ <- .send(coord,tell,threat(X,Y)).
 
-+complete
- <- .print("Patrulha completa!").
++!goto(X,Y)
+ <- moveAndScan(me(),X,Y,F);
+    if F then .send(coord,tell,neutralized(X,Y));
+    .print("scanned (",X,",",Y,") threat=",F).
+
