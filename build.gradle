@@ -13,6 +13,7 @@ group   'org.jacamo'
 
 java {
     toolchain {
+        // compile with Java 17 to match the available JDK
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
