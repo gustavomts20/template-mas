@@ -5,8 +5,8 @@
 +!start
  <- makeArtifact("grid","artifacts.PatrolEnv",[500,200,700,500,10],Env);
     focus(Env);
-    startPatrol.
-    .print("Coordinator ready.").
+     startPatrol;
+     .print("Coordinator ready.").
 
 +ready(D)[source(D)]
  <- +drone(D).
