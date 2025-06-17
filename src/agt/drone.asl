@@ -17,7 +17,8 @@
  <- .send(coord,tell,threat(X,Y)).
 
 +!goto(X,Y)
- <- moveAndScan(me(),X,Y,F);
+ <- .my_name(Me);
+    moveAndScan(Me,X,Y,F);
     if F then .send(coord,tell,neutralized(X,Y));
     .print("scanned (",X,",",Y,") threat=",F).
 
