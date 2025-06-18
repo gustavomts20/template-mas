@@ -1,19 +1,29 @@
-{ include("$jacamo/templates/common-cartago.asl") }
-
 !start.
 
 +!start
- <- makeArtifact("grid","artifacts.PatrolEnv",[500,200,700,500,10],Env);
-    focus(Env);
-     startPatrol;
-     .print("Coordinator ready.").
+ <-  .print("Coordinator online.").
 
-+ready(D)[source(D)]
- <- +drone(D).
++ready[source(D)]
+ <-  lookupArtifact("env", EnvID); 
+     focus(EnvID);
+     position(D,X0,Y0);
+     !compute_nearest(X0,Y0,D).
 
-+threat(X,Y)
- <- .broadcast(tell,gather(X,Y)).
++threatAppeared(X,Y)
+ <-  +threat(X,Y);
+     position("drone1",DX,DY);
+     !compute_nearest(DX,DY,drone1).
 
-+neutralized(X,Y)[source(D)]
- <- .print("Threat at (",X,",",Y,") neutralized by ",D).
++threatNeutralised(X,Y)
+ <-  -threat(X,Y);
+     position("drone1",DX,DY);
+     !compute_nearest(DX,DY,drone1).
 
++!compute_nearest(X0,Y0,From)
+ :  threatsLeft(N) & N > 0
+ <- nearestThreat(X0,Y0,BX,BY);
+    .send(From, tell, target(BX,BY)).
+
++!compute_nearest(_X0,_Y0,From)
+ :  threatsLeft(0)
+ <- .print("No threats to assign to ", From).

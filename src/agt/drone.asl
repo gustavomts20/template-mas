@@ -1,24 +1,41 @@
-{ include("$jacamo/templates/common-cartago.asl") }
+my_name(drone1).
 
-!start.
+!init_patrol.
 
-+!start
- <- .my_name(Me);
-    lookupArtifact("grid",Env) | makeArtifact("grid","artifacts.PatrolEnv",[500,200,700,500,10],Env);
-    focus(Env);
-    registerDrone(Me);
-    .send(coord,tell,ready(Me));
-    .print("Drone ",Me," ready.").
++!init_patrol
+ <-
+     makeArtifact("env","artifacts.PatrolEnv",[0,0,400,400,15],EnvID);
+     focus(EnvID);
+     ?my_name(N);
+     registerDrone(N);
+     .print("Drone ",N," ready for patrol.");
+     .send(coordinator, tell, ready);
+     !!await_cells.
 
-+gather(X,Y)[source(coord)]
- <- !goto(X,Y).
++target(X,Y)[source(coordinator)]
+ <-  .print("Target received: (",X,",",Y,")");
+     !!scan_cell(X,Y).
 
-+threat(X,Y)[source(Env)]
- <- .send(coord,tell,threat(X,Y)).
++lowBattery(N,Lvl)
+ <-  .print("Low battery (",Lvl,") – heading to charger.");
+     position(N,X0,Y0);
+     nearestCharger(X0,Y0,CX,CY);
+     !!scan_cell(CX,CY).
 
-+!goto(X,Y)
- <- .my_name(Me);
-    moveAndScan(Me,X,Y,F);
-    if F then .send(coord,tell,neutralized(X,Y));
-    .print("scanned (",X,",",Y,") threat=",F).
++!scan_cell(X,Y)
+ <- ?my_name(N);
+    navigate(N,X,Y,Arrived);
+    !handle_arrival(N,X,Y,Arrived).
 
++!handle_arrival(N,X,Y,true)
+ <- scan(N,X,Y,Hit).
+
++!handle_arrival(N,X,Y,false)
+ <- !!scan_cell(X,Y).
+
++charged(N)
+ <- .print("Drone ",N," fully recharged.");
+    !!await_cells.
+
++!await_cells
+ <- .print("Awaiting cells to scan...").
