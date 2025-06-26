@@ -17,10 +17,10 @@ my_name(drone1).
      !!scan_cell(X,Y).
 
 +lowBattery(N,Lvl)
- <-  .print("Low battery (",Lvl,") – heading to charger.");
-     position(N,X0,Y0);
-     nearestCharger(X0,Y0,CX,CY);
-     !!scan_cell(CX,CY).
+<-  .print("Low battery (",Lvl,") – heading to charger.");
+    position(N,X0,Y0);
+    nearestCharger(X0,Y0,CX,CY);
+    navigate(N,CX,CY,_).
 
 +!scan_cell(X,Y)
  <- ?my_name(N);

@@ -59,17 +59,25 @@ public class PatrolEnv extends GUIArtifact {
         update();
     }
 
-    @OPERATION void navigate(String name,int tx,int ty,
-                            OpFeedbackParam<Boolean> arrived){
-        Point start = drones.get(name);
-        List<Point> path = findPath(start,new Point(tx,ty));
-        if(path==null){ arrived.set(false); return; }
+    @OPERATION void navigate(String name, int tx, int ty,
+                             OpFeedbackParam<Boolean> arrived) {
 
-        for(Point p : path){
-            if(!alive()) return;
-            drones.put(name,p);
-            spendBattery(name,MOVE_COST);
-            update(); nap(80);
+        Point start = drones.get(name);
+        List<Point> path = findPath(start, new Point(tx, ty));
+        if (path == null) { arrived.set(false); return; }
+
+        for (Point p : path) {
+            if (!alive()) return;
+            drones.put(name, p);
+            spendBattery(name, MOVE_COST);
+            update();
+
+            /* New: auto-recharge */
+            if (isCharger(p) && battery.get(name) < MAX_BAT) {
+                battery.put(name, MAX_BAT);
+                signal("charged", name);
+            }
+            nap(80);
         }
         arrived.set(true);
     }
@@ -196,8 +204,7 @@ public class PatrolEnv extends GUIArtifact {
         scanCounts.merge(c, 1, Integer::sum);
 
         boolean real     = threats.contains(c);
-        boolean noisy    = rnd.nextDouble() < (real ? 0.10 : 0.05);
-        boolean sensed   = real ^ noisy;
+        boolean sensed   = real;
 
         if (sensed && real) {
             threats.remove(c);
@@ -375,15 +382,25 @@ public class PatrolEnv extends GUIArtifact {
         for (Point c : chargers)
             paintCellOval(g, c, CELL_SIZE - 10, CELL_SIZE - 10, 5, 5);
     }
+    
     private void paintDrones(Graphics g) {
         for (Map.Entry<String, Point> e : drones.entrySet()) {
-            Point p = e.getValue();
+            String name = e.getKey();
+            Point  p    = e.getValue();
+
             int px = (p.x - x1) / stepX * CELL_SIZE + 5;
             int py = (p.y - y1) / stepY * CELL_SIZE + 5;
+
             g.setColor(Color.BLUE);
             g.fillRect(px, py, CELL_SIZE - 10, CELL_SIZE - 10);
+
             g.setColor(Color.WHITE);
-            g.drawString(e.getKey(), px + 4, py + 18);
+            g.setFont(g.getFont().deriveFont(Font.PLAIN, 10f));
+
+            g.drawString(name, px + 3, py + 12);
+
+            Integer lvl = battery.getOrDefault(name, 0);
+            g.drawString(lvl + "%", px + 3, py + 24);
         }
     }
 
@@ -420,5 +437,9 @@ public class PatrolEnv extends GUIArtifact {
     private boolean alive() { return !Thread.currentThread().isInterrupted(); }
     private void nap(long ms) {
         try { Thread.sleep(ms); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+    }
+
+    private boolean isCharger(Point p) {
+        return chargers.contains(p);
     }
 }
