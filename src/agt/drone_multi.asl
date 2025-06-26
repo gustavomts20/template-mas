@@ -13,7 +13,13 @@ my_name(Name).
 +target(N,X,Y)[source(env)] : my_name(N)
  <- .print("Moving to target (",X,",",Y,")");
     navigate(N,X,Y,Arr);
-    if Arr then !!scan.
+    !after_nav(Arr).
+
+!after_nav(true)
+ <- !!scan.
+
+!after_nav(false)
+ <- true.
 
 +lowBattery(N,Lvl)[source(env)] : my_name(N)
  <- .print("Low battery ",Lvl,", heading to charger.");
