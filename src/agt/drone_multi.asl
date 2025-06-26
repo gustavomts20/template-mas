@@ -1,14 +1,21 @@
-my_name(Name).
-
 !start.
 
+
 +!start
+ <- .my_name(N);
+    +my_name(N);
+    !!connect_env(N).
+
++!connect_env(N)
  <- lookupArtifact("env",EnvID);
     focus(EnvID);
-    ?my_name(N);
     registerDrone(N);
     .print("Drone ",N," ready.");
     .send(central, tell, ready).
+
++!connect_env(N)[error(action_failed)]
+ <- .wait(500);
+    !!connect_env(N).
 
 +target(N,X,Y)[source(env)] : my_name(N)
  <- .print("Moving to target (",X,",",Y,")");
