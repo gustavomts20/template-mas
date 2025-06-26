@@ -82,6 +82,44 @@ public class PatrolEnv extends GUIArtifact {
         arrived.set(true);
     }
 
+    /** Simple navigation without pathfinding. The drone moves one cell at a
+     *  time directly toward the target. If an obstacle blocks the way the
+     *  operation fails. */
+    @OPERATION void simpleNavigate(String name, int tx, int ty,
+                                   OpFeedbackParam<Boolean> arrived) {
+        Point cur = drones.get(name);
+        Point target = new Point(tx, ty);
+        if (cur == null) { arrived.set(false); return; }
+
+        while (!cur.equals(target)) {
+            if (!alive()) return;
+
+            int nx = cur.x + Integer.compare(target.x, cur.x) * stepX;
+            int ny = cur.y + Integer.compare(target.y, cur.y) * stepY;
+            Point next = new Point(nx, ny);
+
+            if (nx < x1 || nx > x2 || ny < y1 || ny > y2) {
+                arrived.set(false); return;
+            }
+            if (obstacles.contains(next)) {
+                arrived.set(false); return;
+            }
+
+            drones.put(name, next);
+            spendBattery(name, MOVE_COST);
+            cur = next;
+
+            if (isCharger(cur) && battery.get(name) < MAX_BAT) {
+                battery.put(name, MAX_BAT);
+                signal("charged", name);
+            }
+
+            update();
+            nap(80);
+        }
+        arrived.set(true);
+    }
+
     private List<Point> findPath(Point s, Point g) {
 
         if (s.equals(g)) {

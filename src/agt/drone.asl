@@ -20,11 +20,11 @@ my_name(drone1).
 <-  .print("Low battery (",Lvl,") – heading to charger.");
     position(N,X0,Y0);
     nearestCharger(X0,Y0,CX,CY);
-    navigate(N,CX,CY,_).
+    simpleNavigate(N,CX,CY,_).
 
 +!scan_cell(X,Y)
  <- ?my_name(N);
-    navigate(N,X,Y,Arrived);
+     simpleNavigate(N,X,Y,Arrived);
     !handle_arrival(N,X,Y,Arrived).
 
 +!handle_arrival(N,X,Y,true)
