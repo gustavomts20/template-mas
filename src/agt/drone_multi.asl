@@ -15,10 +15,10 @@ my_name(Name).
     navigate(N,X,Y,Arr);
     !after_nav(Arr).
 
-!after_nav(true)
++!after_nav(true)
  <- !!scan.
 
-!after_nav(false)
++!after_nav(false)
  <- true.
 
 +lowBattery(N,Lvl)[source(env)] : my_name(N)
@@ -27,7 +27,7 @@ my_name(Name).
     navigate(N,CX,CY,_).
 
 +charged(N)[source(env)] : my_name(N)
- <- .print("Drone ",N," recharged.");
+ <- .print("Drone ",N," recharged.").
 
 +!scan
  <- ?my_name(N); scan(N,Hit);
