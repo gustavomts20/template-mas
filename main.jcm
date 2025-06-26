@@ -1,6 +1,7 @@
 mas main {
-    agent coordinator : coordinator.asl
-    agent drone1      : drone.asl
+    agent central : central.asl
+    agent drone1  : drone_multi.asl
+    agent drone2  : drone_multi.asl
 
     workspace w {}
 }
