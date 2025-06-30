@@ -30,11 +30,6 @@ public class DroneArena extends GUIArtifact {
     private final Random rnd = new Random();
 
     public void init(){
-        for(int i=0;i<10;i++){
-            Point p;
-            do{p=randomCell();}while(p.equals(new Point(0,0)) || obstacles.contains(p));
-            obstacles.add(p);
-        }
         defineObsProperty("threatsLeft",threats.size());
         createFrame();
         log("DroneArena ready.");
