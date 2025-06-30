@@ -1,5 +1,6 @@
 !start.
 
+
 +!start
  <- .my_name(N);
     +my_name(N);
@@ -16,7 +17,7 @@
  <- .wait(500);
     !!connect_env(N).
 
-+target(N,X,Y) : my_name(N)
++target(N,X,Y)[source(env)] : my_name(N)
  <- .print("Moving to target (",X,",",Y,")");
     navigate(N,X,Y,Arr);
     !after_nav(Arr).
