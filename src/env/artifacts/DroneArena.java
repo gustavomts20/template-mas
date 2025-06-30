@@ -4,6 +4,7 @@ import cartago.*;
 import cartago.tools.GUIArtifact;
 
 import javax.swing.*;
+import jason.asSyntax.Atom;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -100,6 +101,7 @@ public class DroneArena extends GUIArtifact {
     }
 
     @OPERATION void assignTargets(){
+        System.out.println("[env] assigning targets for threats=" + threats);
         for(Point t: new HashSet<>(threats)){
             String best=null; double bestD=Double.MAX_VALUE; int bestBat=0;
             for(String d: drones.keySet()){
@@ -111,7 +113,8 @@ public class DroneArena extends GUIArtifact {
                 }
             }
             if(best!=null){
-                signal("target",best,t.x,t.y);
+                System.out.println("[env] -> target for " + best + " at " + t);
+                signal("target", new Atom(best), t.x, t.y);
             }
         }
     }
@@ -124,7 +127,7 @@ public class DroneArena extends GUIArtifact {
             Point p = drones.get(name);
             if(p!=null && p.equals(new Point(0,0))){
                 battery.put(name,MAX_BAT);
-                signal("charged",name);
+                signal("charged", new Atom(name));
                 update();
             }
             recharging.remove(name);
@@ -134,7 +137,7 @@ public class DroneArena extends GUIArtifact {
     private void spendBattery(String name,int c){
         battery.compute(name,(k,v)->{
             int lvl=(v==null?MAX_BAT:v)-c;
-            if(lvl<=LOW_BAT) signal("lowBattery",k,lvl);
+            if(lvl<=LOW_BAT) signal("lowBattery", new Atom(k), lvl);
             return Math.max(lvl,0);
         });
     }
