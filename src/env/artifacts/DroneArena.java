@@ -234,33 +234,53 @@ public class DroneArena extends GUIArtifact {
             for(int y=0;y<SIZE;y++)
                 g.drawRect(x*CELL_SIZE,y*CELL_SIZE,CELL_SIZE,CELL_SIZE);
     }
+    
     private void paintObstacles(Graphics g){
         g.setColor(Color.DARK_GRAY);
         for(Point o:obstacles)
             g.fillRect(o.x*CELL_SIZE,o.y*CELL_SIZE,CELL_SIZE,CELL_SIZE);
     }
+
     private void paintThreats(Graphics g){
         g.setColor(Color.RED);
         for(Point t:threats)
             g.fillOval(t.x*CELL_SIZE+10,t.y*CELL_SIZE+10,CELL_SIZE-20,CELL_SIZE-20);
     }
+
     private void paintChargers(Graphics g){
         g.setColor(Color.GREEN);
         g.fillOval(5,5,CELL_SIZE-10,CELL_SIZE-10);
     }
-    private void paintDrones(Graphics g){
-        for(String n:drones.keySet()){
-            Point p=drones.get(n);
-            int px=p.x*CELL_SIZE+5;
-            int py=p.y*CELL_SIZE+5;
-            g.setColor(Color.BLUE);
-            g.fillRect(px,py,CELL_SIZE-10,CELL_SIZE-10);
-            g.setColor(Color.WHITE);
-            g.setFont(g.getFont().deriveFont(10f));
-            g.drawString(n,px+3,py+12);
-            Integer lvl=battery.getOrDefault(n,0);
-            g.drawString(lvl+"%",px+3,py+24);
+
+    private void paintDrones(Graphics g) {
+        for(String n : drones.keySet()) {
+            Point p = drones.get(n);
+            int px = p.x * CELL_SIZE + 5;
+            int py = p.y * CELL_SIZE + 5;
+
+            g.drawImage(droneImg, px, py, CELL_SIZE - 10, CELL_SIZE - 10, null);
+
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setFont(g2d.getFont().deriveFont(10f));
+            String batteryText = battery.getOrDefault(n, 0) + "%";
+
+            drawOutlinedText(g2d, n, px + 3, py + 12);
+            drawOutlinedText(g2d, batteryText, px + 3, py + 24);
         }
+    }
+
+    private void drawOutlinedText(Graphics2D g2d, String text, int x, int y) {
+        Color textColor = Color.YELLOW;
+        Color outlineColor = Color.BLACK;
+
+        g2d.setColor(outlineColor);
+        g2d.drawString(text, x - 1, y);
+        g2d.drawString(text, x + 1, y);
+        g2d.drawString(text, x, y - 1);
+        g2d.drawString(text, x, y + 1);
+
+        g2d.setColor(textColor);
+        g2d.drawString(text, x, y);
     }
 
     private final List<Thread> runningThreads = new ArrayList<>();
