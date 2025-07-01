@@ -29,12 +29,19 @@ public class DroneArena extends GUIArtifact {
     private DrawPanel drawPanel;
     private final Random rnd = new Random();
 
+    private Image chargerImg;
+    private Image droneImg;
+    private Image threatImg;
+
     public void init(){
         // for(int i=0;i<10;i++){
         //     Point p;
         //     do{p=randomCell();}while(p.equals(new Point(0,0)) || obstacles.contains(p));
         //     obstacles.add(p);
         // }
+        chargerImg = new ImageIcon("images/charger.png").getImage().getScaledInstance(CELL_SIZE-10, CELL_SIZE-10, Image.SCALE_SMOOTH);
+        droneImg = new ImageIcon("images/drone.png").getImage().getScaledInstance(CELL_SIZE-10, CELL_SIZE-10, Image.SCALE_SMOOTH);
+        threatImg = new ImageIcon("images/threat.png").getImage().getScaledInstance(CELL_SIZE-10, CELL_SIZE-10, Image.SCALE_SMOOTH);
         defineObsProperty("threatsLeft",threats.size());
         createFrame();
         log("DroneArena preparado.");
@@ -242,14 +249,15 @@ public class DroneArena extends GUIArtifact {
     }
 
     private void paintThreats(Graphics g){
-        g.setColor(Color.RED);
-        for(Point t:threats)
-            g.fillOval(t.x*CELL_SIZE+10,t.y*CELL_SIZE+10,CELL_SIZE-20,CELL_SIZE-20);
+        for(Point t: threats){
+            int x = t.x * CELL_SIZE + 5;
+            int y = t.y * CELL_SIZE + 5;
+            g.drawImage(threatImg, x, y, CELL_SIZE-10, CELL_SIZE-10, null);
+        }
     }
 
     private void paintChargers(Graphics g){
-        g.setColor(Color.GREEN);
-        g.fillOval(5,5,CELL_SIZE-10,CELL_SIZE-10);
+        g.drawImage(chargerImg, 5, 5, CELL_SIZE-10, CELL_SIZE-10, null);
     }
 
     private void paintDrones(Graphics g) {
