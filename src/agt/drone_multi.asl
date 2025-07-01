@@ -9,7 +9,7 @@
  <- lookupArtifact("env",EnvID);
     focus(EnvID);
     registerDrone(N);
-    .print("Drone ",N," ready.");
+    .print("Drone ",N," preparado.");
     !!update_status;
     .send(central,tell,ready).
 
@@ -51,7 +51,7 @@
     !after_move(Arr).
 
 +!move_step : position(X,Y) & target(X,Y)
- <- .print("Arrived at target (",X,",",Y,")");
+ <- .print("Alcançou o alvo (",X,",",Y,")");
     !!scan.
 
 +!after_move(true)
@@ -59,19 +59,19 @@
     !!move_step.
 
 +!after_move(false)
- <- .print("Step failed, retrying …");
+ <- .print("Processo falhou, tentando novamente …");
     !!update_status;
     !!move_step.
 
 +lowBattery(N,Lvl) : my_name(N)
- <- .print("Low battery ",Lvl,"%, heading to charger.");
+ <- .print("Bateria fraca ",Lvl,"%, dirigindo-se ao carregador.");
     .abolish(target(_,_));
     +target(0,0);
     !!move_step.
 
 +charged(N) : my_name(N)
- <- .print("Drone ",N," recharged.").
+ <- .print("Drone ",N," recarregado.").
 
 +!scan : my_name(N)
  <- scan(N,Hit);
-    .print("Scan result ",Hit).
+    .print("Resultado do scan ",Hit).

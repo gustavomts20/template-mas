@@ -3,23 +3,23 @@
 +!start
  <- makeArtifact("env","artifacts.DroneArena",[],EnvID);
     focus(EnvID);
-    .print("Coordinator ready.");
+    .print("Coordenador preparado.");
     !!assign.
 
 +ready[source(D)]
- <- .print(D," ready");
+ <- .print(D," pronto");
     !!assign.
 
 +threatAppeared(X,Y)
- <- .print("Threat at (",X,",",Y,")");
+ <- .print("Ameaça em (",X,",",Y,")");
     !!assign.
 
 +threatNeutralised(X,Y)
- <- .print("Threat neutralised (",X,",",Y,")");
+ <- .print("Ameaça neutralizada (",X,",",Y,")");
     !!assign.
 
 +charged(D)
- <- .print(D," charged");
+ <- .print(D," carregado");
     !!assign.
 
 +!assign

@@ -37,7 +37,7 @@ public class DroneArena extends GUIArtifact {
         // }
         defineObsProperty("threatsLeft",threats.size());
         createFrame();
-        log("DroneArena ready.");
+        log("DroneArena preparado.");
     }
 
     @OPERATION void registerDrone(String name){
@@ -101,7 +101,7 @@ public class DroneArena extends GUIArtifact {
     }
 
     @OPERATION void assignTargets(){
-        System.out.println("[env] assigning targets for threats=" + threats);
+        System.out.println("[env] atribuindo alvos para ameaças=" + threats);
         for(Point t: new HashSet<>(threats)){
             String best=null; double bestD=Double.MAX_VALUE; int bestBat=0;
             for(String d: drones.keySet()){
@@ -113,7 +113,7 @@ public class DroneArena extends GUIArtifact {
                 }
             }
             if(best!=null){
-                System.out.println("[env] -> target for " + best + " at " + t);
+                System.out.println("[env] -> alvo para " + best + " na posição " + t);
                 signal("target", new Atom(best), t.x, t.y);
             }
         }
